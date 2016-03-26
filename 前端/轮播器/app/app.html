@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="jquery.js"></script>
+    <style type="text/css">
+        .container {
+            margin: 200px auto;
+            width: 600px;
+            height: 400px;
+            background-color: aliceblue;
+            overflow: hidden;
+            position: relative;
+
+        }
+        .photo_container {
+            position: relative;
+            width: 3000px;
+            height: 400px;
+            transition: all 0.5s ease;
+            left: 0px;
+        }
+        .photo_item {
+            float: left;
+            display: inline-block;
+            margin: 0 auto;
+            padding: 0 auto;
+            background-color: black;
+            width: 600px;
+            height: 400px;
+        }
+        .selector {
+            position: relative;
+            top: -40px;
+            margin: 0 auto;
+            background-color: lightgrey;
+            opacity: 0.7;
+            width: 200px;
+            height: 30px;
+            border-radius: 15px;
+        }
+        .selector-item {
+            width: 10px;
+            height: 10px;
+            float: left;
+            display: inline-block;
+            border-radius: 5px;
+            background-color: darkslategray;
+
+            margin: 10px 15px 10px 15px;
+        }
+        .selector-item li {
+            margin: 0 auto;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="photo_container">
+            <div class="photo_item">
+                <img src="1.png" style="width: inherit;height: inherit" alt="">
+            </div>
+            <div class="photo_item" >
+                <img src="2.png" style="width: inherit;height: inherit" alt="">
+            </div>
+            <div class="photo_item">
+                <img src="3.png" style="width: inherit;height: inherit" alt="">
+            </div>
+            <div class="photo_item">
+                <img src="4.png" style="width: inherit;height: inherit" alt="">
+            </div>
+            <div class="photo_item">
+                <img src="5.png" style="width: inherit;height: inherit" alt="">
+            </div>
+
+        </div>
+        <div class="selector">
+            <div class="selector-item">
+            </div>
+            <div class="selector-item">
+            </div>
+            <div class="selector-item">
+            </div>
+            <div class="selector-item">
+            </div>
+            <div class="selector-item">
+            </div>
+        </div>
+        <script>
+            $(function() {
+                $('.selector-item').each(function(index) {
+                    $(this).click(function() {
+                        console.log(index);
+                        $('.photo_container').css('left', -index * 600 + 'px');
+                        $('.selector-item').not($(this)).css('background-color', 'gray')
+                        $(this).css('background-color', 'red')
+                    });
+                });
+            })
+            function Carousel(index) {
+                index += 1;
+                if (index > 4) {
+                    index = 0;
+                }
+                $('.photo_container').css('left', -index * 600 + 'px');
+                setTimeout(function() {
+                    Carousel(index)
+                }, 2000);
+            }
+            //Carousel(-1);
+
+        </script>
+    </div>
+
+</body>
+</html>
