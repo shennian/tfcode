@@ -24,7 +24,7 @@ def route(path, **kwargs):#path and metho
             def inner():
                 return function()
         else:
-            def inner(name, *args):
+            def inner(name):
                 return function(name)
         return inner
     return fuck
