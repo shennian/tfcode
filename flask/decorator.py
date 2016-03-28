@@ -21,11 +21,11 @@ def route(path, **kwargs):#path and metho
 
     def fuck(function):
         if name is None:
-            def inner(*args):
-                return function(*args)
+            def inner():
+                return function()
         else:
             def inner(name, *args):
-                return function(name, *args)
+                return function(name)
         return inner
     return fuck
 
