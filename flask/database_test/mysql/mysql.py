@@ -3,7 +3,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://sen_flask_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:kqf911@128.199.128.244:3306/sen_flask_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
@@ -19,7 +19,7 @@ class User(db.Model):
 
 @app.route('/')
 def hello_world():
-    user = User(name="sen", id=1, email="hha", gender='233', password='234')
+    user = User(name="sen", id=2, email="hha", gender='233', password='234')
     db.session.add(user)
     db.session.commit()
     return 'Hello World!'

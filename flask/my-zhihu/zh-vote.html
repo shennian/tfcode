@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+      .container {
+        margin: 100px auto;
+        width: 100px;
+      }
+      .user-photo {
+        width: 100px;
+        height: 100px;
+      }
+      .user-photo img {
+        width: 100px;
+        height: 100px;
+      }
+      .zh-vote-button {
+        width: 100px;
+        margin: 10px auto;
+        background-color: dodgerblue;
+      }
+      .zh-vote-button button {
+        width: 100px;
+        height: 30px;
+        background-color: gray;
+        border: none;
+        color: dodgerblue;
+        text-align: center;
+        border-bottom-width: 0px;
+      }
+      .zh-vote-button button:hover {
+        background-color: dodgerblue;
+        color: gray;
+      }
+      .zh-vote {
+        width: 100px;
+        height: 30px;
+        background-color: dodgerblue;
+        text-align: center;
+        margin-top: 20px;
+      }
+    </style>
+    <script src="jquery.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="user-photo">
+        <img src="1.jpg" alt="">
+      </div>
+      <div class="zh-vote-button">
+        <div>
+          <button id="btn"><span>1</span></button>
+        </div>
+      </div>
+      <script>
+        $('#btn').click(function() {
+          $(this).text(parseInt($(this).text()) + 1);
+          //$('#btn').insertBefore("<p>hha</p>")
+          $( "<p>up</p>" ).insertBefore( "#btn" )
+          $(".zh-vote-button").after("<div class='zh-vote'>down</div>");
+          console.log(jQuery.type($('#btn.span')));
+          $(this).unbind()
+        });
+      </script>
+
+    </div>
+  </body>
+</html>
