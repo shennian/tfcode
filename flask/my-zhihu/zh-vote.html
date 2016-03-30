@@ -1,70 +1,161 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-    <style>
-      .container {
-        margin: 100px auto;
-        width: 100px;
-      }
-      .user-photo {
-        width: 100px;
-        height: 100px;
-      }
-      .user-photo img {
-        width: 100px;
-        height: 100px;
-      }
-      .zh-vote-button {
-        width: 100px;
-        margin: 10px auto;
-        background-color: dodgerblue;
-      }
-      .zh-vote-button button {
-        width: 100px;
-        height: 30px;
-        background-color: gray;
-        border: none;
-        color: dodgerblue;
-        text-align: center;
-        border-bottom-width: 0px;
-      }
-      .zh-vote-button button:hover {
-        background-color: dodgerblue;
-        color: gray;
-      }
-      .zh-vote {
-        width: 100px;
-        height: 30px;
-        background-color: dodgerblue;
-        text-align: center;
-        margin-top: 20px;
-      }
-    </style>
-    <script src="jquery.js"></script>
-  </head>
-  <body>
-    <div class="container">
-      <div class="user-photo">
-        <img src="1.jpg" alt="">
-      </div>
-      <div class="zh-vote-button">
-        <div>
-          <button id="btn"><span>1</span></button>
-        </div>
-      </div>
-      <script>
-        $('#btn').click(function() {
-          $(this).text(parseInt($(this).text()) + 1);
-          //$('#btn').insertBefore("<p>hha</p>")
-          $( "<p>up</p>" ).insertBefore( "#btn" )
-          $(".zh-vote-button").after("<div class='zh-vote'>down</div>");
-          console.log(jQuery.type($('#btn.span')));
-          $(this).unbind()
-        });
-      </script>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <style>
+    .zh-user-photo {
+      position: relative;
+      margin: 100px auto;
+      margin-bottom: 0px;
 
+      width: 40px;
+      height: 40px;
+    }
+    .zh-user-photo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 5px;
+    }
+    .zh-vote-approve, .zh-vote-disapprove {
+      position: relative;
+      margin: 5px auto;
+      width: 40px;
+      height: 20px;
+      text-align: center;
+      background-color: lightblue;
+      color: dodgerblue;
+      border-radius: 2px;
+    }
+    .zh-vote-approve-click-off, .zh-vote-disapprove-click-on {
+      position: relative;
+      margin: 5px auto;
+      width: 40px;
+      height: 20px;
+      text-align: center;
+      background-color: lightblue;
+      color: dodgerblue;
+      border-radius: 2px;
+    }
+    .zh-vote-approve-click-on {
+      position: relative;
+      margin: 5px auto;
+      width: 40px;
+      height: 45px;
+      text-align: center;
+      background-color: lightblue;
+      color: dodgerblue;
+      border-radius: 2px;
+    }
+    .zh-vote-approve-click-up {
+      position: relative;
+      margin: 5px auto;
+      width: 40px;
+      height: 45px;
+      text-align: center;
+      background-color: dodgerblue;
+      color: white;
+      border-radius: 2px;
+    }
+    .zh-vote-disapprove-click-up {
+      position: relative;
+      margin: 5px auto;
+      width: 40px;
+      height: 20px;
+      text-align: center;
+      background-color: dodgerblue;
+      color: white;
+      border-radius: 2px;
+    }
+  </style>
+  <script src="jquery.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+  <div class="zh-user-photo">
+    <img src="1.jpg" alt="">
+  </div>
+  <div class="zh-vote-box">
+    <div id="zh-vote-approve" data-clicl-state="off">
+      <div>
+        <span id = "ups-logo" class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span>
+      </div>
+      <div id = "ups">
+        <span>1</span>
+      </div>
     </div>
-  </body>
+    <div id="zh-vote-disapprove" data-clicl-state="off">
+      <div id = "downs-logo">
+        <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $("#zh-vote-approve").addClass("zh-vote-approve-click-off");
+      $("#ups-logo").hide();
+      $("#downs-logo").hide();
+      $("#zh-vote-approve").click(function() {
+        $("#ups-logo").show();
+        var state = $(this).data("clicl-state");
+        console.log(state)
+        if (state == "off") {
+          // off -> on
+          $(this).removeClass("zh-vote-approve-click-off");
+          $(this).addClass("zh-vote-approve-click-on");
+          $("#zh-vote-disapprove").addClass("zh-vote-disapprove-click-on");
+          $("#downs-logo").show();
+          $(this).data("clicl-state", "on")
+
+        } else if (state == "on") {
+          // on -> approve
+          $(this).removeClass("zh-vote-approve-click-on");
+          $(this).addClass("zh-vote-approve-click-up");
+          $(this).data("clicl-state", "approve")
+          $("#zh-vote-disapprove").removeClass();
+          $("#zh-vote-disapprove").addClass("zh-vote-approve-click-off");
+          $("#zh-vote-disapprove").data("clicl-state", "off")
+
+          $("#ups").text(parseInt($("#ups").text()) + 1);
+        } else {
+          $(this).removeClass("zh-vote-approve-click-up");
+          $(this).addClass("zh-vote-approve-click-on");
+          $(this).data("clicl-state", "on")
+          $("#ups").text(parseInt($("#ups").text()) - 1);
+        }
+      });
+      $("#zh-vote-disapprove").click(function() {
+
+        var state = $(this).data("clicl-state");
+        console.log(state+"->")
+        if (state == "off") {
+          // off -> on
+          $(this).removeClass("zh-vote-disapprove-click-off");
+          $(this).addClass("zh-vote-disapprove-click-up");
+          $(this).data("clicl-state", "on");
+          $("#zh-vote-approve").removeClass("zh-vote-approve-click-up");
+          $("#zh-vote-approve").addClass("zh-vote-approve-click-on");
+          $("#ups-logo").show();
+          $("#ups").show();
+          $("#zh-vote-approve").data("clicl-state", "on")
+          $("#ups").text(parseInt($("#ups").text()) - 1);
+          console.log("fuck")
+
+        } else if (state == "on") {
+          // on -> off
+          $(this).removeClass("zh-vote-disapprove-click-up");
+          $(this).addClass("zh-vote-disapprove-click-off");
+          $(this).data("clicl-state", "off");
+        }
+      });
+    });
+  </script>
+</div>
+
+
+</body>
+
 </html>
+
