@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <style>
+      span {
+        color: gray;
+        font-size: 12px;
+      }
+      .zh-container {
+        margin: 100px auto;
+        position: relative;
+        width: 650px;
+        height: auto;
+      }
+      .zh-content-box {
+        position: relative;
+        width: 600px;
+        margin-top: 10px;
+        height: auto;
+        border-bottom: solid lightgray 1px;
+        padding-bottom: 10px;
+        display: inline-block;
+        float: left;
+      }
+      .zh-content-header {
+        position: relative;
+        width: 600px;
+        height: 20px;
+      }
+      .zh-content-header a {
+        text-decoration: none;
+        color: gray;
+      }
+      .zh-content-header a:hover {
+        color:lightblue;
+      }
+      .zh-content-header > span:last-child {
+        float: right;
+      }
+      .zh-content-body {
+        position: relative;
+        width: 600px;
+        height: auto;
+        margin: 5px auto;
+      }
+      .zh-content-title a {
+        color: lightblue;
+        font-size: 18px;
+        text-decoration: none;
+      }
+      .zh-content-summary {
+        position: relative;
+        width: 600px;
+        height: auto;
+        margin-top: 5px;
+        font-size: 12px;
+        line-height: 1.8;
+      }
+      .zh-content-footer {
+        position: relative;
+        width: 600px;
+        height: 20px;
+        margin: 5px auto;
+      }
+      .zh-content-footer span:not(:first-child) {
+        margin-left: 10px;
+      }
+      .zh-content-footer a {
+        text-decoration: none;
+        color: gray;
+      }
+      .zh-user-profile, .test-zh-user-profile {
+        width:320px;
+        height: 200px;
+        z-index: 90;
+        background-color: white;
+        position: absolute;
+        border-radius: 5px;
+        border: solid gray 1px;
+        top:30px;
+        left: -20px;
+        padding: 10px 10px 10px 10px;
+        display: none;
+      }
+      .zh-user-profile-up {
+        position: relative;
+        width: 300px;
+        height: 120px;
+      }
+      .zh-user-profile-down {
+        position: relative;
+        width: 300px;
+        height: 60px;
+      }
+      .zh-user-photo {
+        position: relative;
+        width: 60px;
+        height: 60px;
+        border-radius: 5px;
+        display: inline-block;
+        float: left;
+      }
+      .zh-user-photo img {
+        width: 60px;
+        height: 60px;
+        border-radius: 5px;
+      }
+      .zh-user-info-card {
+        position: relative;
+        width: 230px;
+        height: 70px;
+        display: inline-block;
+        float: left;
+        margin-left: 10px;
+        border-bottom: solid lightgray 1px;
+      }
+      .zh-user-info-card a {
+        text-decoration: none;
+        font-size: 18px;
+        color: #0066FF;
+      }
+      .zh-user-info-card p {
+        font-size: 12px;
+        line-height: 2;
+      }
+      .zh-user-activity {
+        height: 60px;
+        width: 60px;
+        display: inline-block;
+        float: left;
+        text-align: center;
+        color: grey;
+      }
+      .zh-user-activity div {
+        margin-top: 8px;
+      }
+      .zh-user-activity div strong:first-child {
+        color: black;
+      }
+      .zh-follow-button {
+        position: relative;
+        display: inline-block;
+        float: right;
+        height: 40px;
+        width: 50px;
+        margin: 10px 0px 10px 10px;
+        text-align: center;
+        border: solid lightgrey 1px;
+        border-radius: 5px;
+        color: grey;
+        font-size: 14px;
+        background-color: #FFCCCC;
+      }
+      .zh-follow-button div {
+        position: relative;
+        margin-top: 10px;
+      }
+      .zh-email-button {
+        display: inline-block;
+        float: right;
+        height: 40px;
+        width: 40px;
+        border-radius: 5px;
+        margin: 10px 0px 10px 0px;
+        text-align: center;
+        border: solid lightgrey 1px;
+      }
+      .triangle {
+        position: absolute;
+        z-index: 100;
+        transform:rotate(45deg);
+        width: 15px;
+        height: 15px;
+        top:-9px;
+        left: 31px;
+        background-color: white;
+        border-top: solid gray 1px;
+        border-left: solid gray 1px;
+      }
+
+      .zh-vote {
+        margin-top: 10px;
+        margin-right: 10px;
+        position: relative;
+        display: inline-block;
+        float: left;
+
+      }
+      .zh-vote-box {
+        position: relative;
+        margin-top: 10px;
+
+      }
+      .zh-user-photo-vote {
+        position: relative;
+        margin-bottom: 0px;
+
+        width: 40px;
+        height: 40px;
+      }
+      .zh-user-photo-vote img {
+        width: 40px;
+        height: 40px;
+        border-radius: 5px;
+      }
+      .zh-vote-approve, .zh-vote-disapprove {
+        position: relative;
+        margin: 5px auto;
+        width: 40px;
+        height: 20px;
+        text-align: center;
+        background-color: lightblue;
+        color: dodgerblue;
+        border-radius: 2px;
+      }
+      .zh-vote-approve-click-off, .zh-vote-disapprove-click-on {
+        position: relative;
+        margin: 5px auto;
+        width: 40px;
+        height: 20px;
+        text-align: center;
+        background-color: lightblue;
+        color: dodgerblue;
+        border-radius: 2px;
+      }
+      .zh-vote-approve-click-on {
+        position: relative;
+        margin: 5px auto;
+        width: 40px;
+        height: 45px;
+        text-align: center;
+        background-color: lightblue;
+        color: dodgerblue;
+        border-radius: 2px;
+      }
+      .zh-vote-approve-click-up {
+        position: relative;
+        margin: 5px auto;
+        width: 40px;
+        height: 45px;
+        text-align: center;
+        background-color: dodgerblue;
+        color: white;
+        border-radius: 2px;
+      }
+      .zh-vote-disapprove-click-up {
+        position: relative;
+        margin: 5px auto;
+        width: 40px;
+        height: 20px;
+        text-align: center;
+        background-color: dodgerblue;
+        color: white;
+        border-radius: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="zh-container">
+      <div class="zh-vote">
+        <div class="zh-user-photo-vote">
+          <img src="1.jpg" alt="">
+        </div>
+        <div class="zh-vote-box">
+          <div id="zh-vote-approve" data-clicl-state="off">
+            <div>
+              <span id = "ups-logo" class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span>
+            </div>
+            <div id = "ups">
+              <span>1</span>
+            </div>
+          </div>
+          <div id="zh-vote-disapprove" data-clicl-state="off">
+            <div id = "downs-logo">
+              <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="zh-content-box">
+          <div class="zh-content-header">
+            <span id = "user"><a href="#">知乎用户</a></span>
+            <span>回答了该问题</span>
+            <span>1分钟前</span>
+          </div>
+          <div class="zh-content-body">
+            <div class="zh-content-title">
+              <a href="#">科比在最后一个赛季受到的待遇和追捧，詹姆斯退役时会受到吗?</a>
+            </div>
+            <div class="zh-content-summary">
+              苹果打出了 gg是我，是我先，明明都是我先来的……GUI 也好，鼠标也好，还是自带 *Nix 环境也好为什么你会这么熟练啊！你和 Canonical 搞过多少次了啊！？你到底要把我甩开多远你才甘心啊！？（逃
+            </div>
+          </div>
+          <div class="zh-content-footer">
+            <span>
+              <a href="#">关注问题</a>
+            </span>
+            <span>
+              <a href="#">添加评论</a>
+            </span>
+            <span>
+              <a href="#">感谢</a>
+            </span>
+            <span>
+              <a href="#">收藏</a>
+            </span>
+            <span>
+              <a href="#">没有帮助</a>
+            </span>
+            <span>
+              <a href="#">举报</a>
+            </span>
+            <span>
+              <a href="#">作者保留权利</a>
+            </span>
+          </div>
+      </div>
+    </div>
+
+
+    <div class="test-zh-user-profile">
+      <div class="triangle">
+
+      </div>
+      <div class="zh-user-profile-up">
+        <div class="zh-user-photo">
+          <img src="1.jpg" alt="" />
+        </div>
+        <div class="zh-user-info-card">
+          <div>
+            <a href="#"><strong>知乎用户</strong></a>
+          </div>
+          <div>
+            <p>
+              真理研究員
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="-zh-user-profile-down">
+        <div class="zh-user-activity">
+          <div class="">
+            <strong>16</strong>
+          </div>
+          <div class="">
+            回答
+          </div>
+        </div>
+        <div class="zh-user-activity">
+          <div class="">
+            <strong>6</strong>
+          </div>
+          <div class="">
+            文章
+          </div>
+        </div>
+        <div class="zh-user-activity">
+          <div class="">
+            <strong>1864</strong>
+          </div>
+          <div class="">
+            关注者
+          </div>
+        </div>
+        <div class="zh-follow-button">
+          <div><span>关注他</span></div>
+        </div>
+        <div class="zh-email-button">
+
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="jquery.js"></script>
+  <script>
+    $(document).ready(function() {
+      $(".zh-content-footer").each(function(index) {
+        $(this).find("span").slice(2, 6).hide();
+      });
+      $(".zh-container").each(function(index) {
+        $(this).find("#user").hover(function() {
+            $(".test-zh-user-profile").show();
+            $(this).append($(".test-zh-user-profile"));
+        });
+        $(this).find(".zh-content-box").hover(function(){
+          $(this).find(".zh-content-footer span").slice(2, 6).show();
+          $(".test-zh-user-profile").slice(0, 1).hide();
+          $(".test-zh-user-profile").slice(1).remove();
+        }, function() {
+          $(this).find(".zh-content-footer span").slice(2, 6).hide();
+        });
+      });
+    });
+  </script>
+  <script>
+    $(document).ready(function() {
+      $("#zh-vote-approve").addClass("zh-vote-approve-click-off");
+      $("#ups-logo").hide();
+      $("#downs-logo").hide();
+      $("#zh-vote-approve").click(function() {
+        $("#ups-logo").show();
+        var state = $(this).data("clicl-state");
+        console.log(state)
+        if (state == "off") {
+          // off -> on
+          $(this).removeClass("zh-vote-approve-click-off");
+          $(this).addClass("zh-vote-approve-click-on");
+          $("#zh-vote-disapprove").addClass("zh-vote-disapprove-click-on");
+          $("#downs-logo").show();
+          $(this).data("clicl-state", "on")
+
+        } else if (state == "on") {
+          // on -> approve
+          $(this).removeClass("zh-vote-approve-click-on");
+          $(this).addClass("zh-vote-approve-click-up");
+          $(this).data("clicl-state", "approve")
+          $("#zh-vote-disapprove").removeClass();
+          $("#zh-vote-disapprove").addClass("zh-vote-approve-click-off");
+          $("#zh-vote-disapprove").data("clicl-state", "off")
+
+          $("#ups").text(parseInt($("#ups").text()) + 1);
+        } else {
+          $(this).removeClass("zh-vote-approve-click-up");
+          $(this).addClass("zh-vote-approve-click-on");
+          $(this).data("clicl-state", "on")
+          $("#ups").text(parseInt($("#ups").text()) - 1);
+        }
+      });
+      $("#zh-vote-disapprove").click(function() {
+
+        var state = $(this).data("clicl-state");
+        console.log(state+"->")
+        if (state == "off") {
+          // off -> on
+          $(this).removeClass("zh-vote-disapprove-click-off");
+          $(this).addClass("zh-vote-disapprove-click-up");
+          $(this).data("clicl-state", "on");
+          $("#zh-vote-approve").removeClass("zh-vote-approve-click-up");
+          $("#zh-vote-approve").addClass("zh-vote-approve-click-on");
+          $("#ups-logo").show();
+          $("#ups").show();
+          $("#zh-vote-approve").data("clicl-state", "on")
+          $("#ups").text(parseInt($("#ups").text()) - 1);
+          console.log("fuck")
+
+        } else if (state == "on") {
+          // on -> off
+          $(this).removeClass("zh-vote-disapprove-click-up");
+          $(this).addClass("zh-vote-disapprove-click-off");
+          $(this).data("clicl-state", "off");
+        }
+      });
+    });
+  </script>
+</html>
