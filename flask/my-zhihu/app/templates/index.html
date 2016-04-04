@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+    <style>
+        .my-zh-container {
+            margin: 200px auto;
+            width: 20%;
+            height: auto;
+            text-align: center;
+        }
+        .my-zh-logo {
+            width: 100%;
+            color: lightblue;
+            line-height: 60px;
+            font-size: 30px;
+        }
+        .my-zh-tabs {
+            width: 100%;
+            height: 30px;
+
+        }
+        .zh-tab-login, .zh-tab-register {
+            width: 50%;
+            height: 30px;
+            font-size: 16px;
+            line-height: 30px;
+            display: inline-block;
+            float: left;
+        }
+        .zh-login-form, .zh-register-form {
+            margin-top: 20px;
+            width: 100%;
+            height: auto;
+            border: solid lightgrey 1px;
+        }
+        .zh-register-form {
+            display: none;
+        }
+
+        .my-zh-input {
+            width: 100%;
+            overflow: hidden;
+        }
+        .my-zh-input:not(:last-child) {
+            border-bottom: solid lightgrey 1px;
+        }
+        .my-zh-input input {
+            width: 100%;
+            height: 30px;
+            padding-left: 10px;
+            padding-right: 10px;
+            outline: none;
+            border: none;
+        }
+        .my-zh-button {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            background-color: lightblue;
+        }
+    </style>
+</head>
+<body>
+ <div class="my-zh-container">
+     <div class="my-zh-logo">
+         <span>my-zhihu</span>
+     </div>
+     <div class="my-zh-tabs">
+         <div class="zh-tab-login">
+             <span>登录</span>
+         </div>
+         <div class="zh-tab-register">
+             <span>注册</span>
+         </div>
+     </div>
+     <div class="zh-login-form">
+         <form action="#">
+             <div class="my-zh-input">
+                 <input type="text" placeholder="邮箱" name="email">
+             </div>
+             <div class="my-zh-input">
+                 <input type="text" placeholder="密码" name="password">
+             </div>
+             <div class="my-zh-input">
+                 <div style="display: inline-block; float: left; width: 70%">
+                     <input type="text" placeholder="验证码" name="check_code">
+                 </div>
+
+                 <div style="display: inline-block; float: left; width: 30%">
+                     <img src="1.png" style="width: 100%; height: 30px" alt="">
+                 </div>
+             </div>
+             <div id="login" class="my-zh-button">
+                 确定
+             </div>
+         </form>
+
+     </div>
+     <div class="zh-register-form">
+         <form action="#">
+             <div class="my-zh-input">
+                 <input type="text" placeholder="邮箱" name="email">
+             </div>
+             <div class="my-zh-input">
+                 <input type="text" placeholder="密码" name="password">
+             </div>
+             <div class="my-zh-input">
+                 <input type="text" placeholder="确认密码" name="password">
+             </div>
+             <div class="my-zh-input">
+                 <div style="display: inline-block; float: left; width: 70%">
+                     <input type="text" placeholder="验证码" name="check_code">
+                 </div>
+                 <div style="display: inline-block; float: left; width: 30%">
+                     <img src="1.png" style="width: 100%; height: 30px" alt="">
+                 </div>
+             </div>
+             <div id="register" class="my-zh-button">
+                 确定
+             </div>
+         </form>
+     </div>
+ </div>
+
+ <script>
+     $(document).ready(function() {
+         $(".zh-tab-login").css("border-bottom", "solid lightblue 2px");
+         $(".zh-tab-login").on("click", function() {
+             $(".zh-tab-login").css("border-bottom", "solid lightblue 2px");
+             $(".zh-login-form").show();
+             $(".zh-tab-register").css("border-bottom", "");
+             $(".zh-register-form").hide();
+
+
+         });
+         $(".zh-tab-register").on("click", function() {
+             $(".zh-tab-register").css("border-bottom", "solid lightblue 2px");
+             $(".zh-register-form").show();
+             $(".zh-tab-login").css("border-bottom", "");
+             $(".zh-login-form").hide();
+         });
+         $("#login").on('click', function() {
+             $.ajax({
+                 url:"http://104.236.182.128:5000/",
+                 data: {
+                     email: $(".zh-login-form").find("input[name=email]").val(),
+                     password: $(".zh-login-form").find("input[name=password]").val(),
+                     test: "hah"
+                 },
+                 datatype: 'json',
+                 success: function(data) {
+                     location.href = "#"
+                 }
+             },
+             type='post');
+         console.log($(".zh-login-form").find("input[name=email]").val())})
+     });
+ </script>
+
+</body>
+</html>
