@@ -7,9 +7,27 @@ from .. import db
 from ..models import User
 
 
-@main.route("/", methods=['get', 'post'])
+@main.before_request
+def haha():
+    session_id = None
+    try:
+        session_id = session['id']
+    except:
+        return 'login first'
+
+
+@main.route("/main", methods=['get', 'post'])
 def index():
-    form = NameForm()
-    if form.validate_on_submit():
-        return "yes"
-    return render_template("main/index.html", form=form)
+    print 'shit'
+    return render_template("main/main.html")
+
+
+@main.route('/main/vote', methods=['get', 'post'])
+def vote():
+    pass
+
+
+@main.route('/main/comment', methods=['get', 'post'])
+def comment():
+    pass
+
