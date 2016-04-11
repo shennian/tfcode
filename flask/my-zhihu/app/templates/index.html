@@ -92,7 +92,7 @@
                  </div>
 
                  <div style="display: inline-block; float: left; width: 30%">
-                     <img src="1.png" style="width: 100%; height: 30px" alt="">
+                     <img src="/static/{{ check_code }}" style="width: 100%; height: 30px" alt="">
                  </div>
              </div>
              <div id="login" class="my-zh-button">
@@ -103,6 +103,9 @@
      </div>
      <div class="zh-register-form">
          <form action="#">
+             <div class="my-zh-input">
+                 <input type="text" placeholder="用户名" name="name">
+             </div>
              <div class="my-zh-input">
                  <input type="text" placeholder="邮箱" name="email">
              </div>
@@ -117,7 +120,7 @@
                      <input type="text" placeholder="验证码" name="check_code">
                  </div>
                  <div style="display: inline-block; float: left; width: 30%">
-                     <img src="1.png" style="width: 100%; height: 30px" alt="">
+                     <img src="/static/{{ check_code }}" style="width: 100%; height: 30px" alt="">
                  </div>
              </div>
              <div id="register" class="my-zh-button">
@@ -146,19 +149,35 @@
          });
          $("#login").on('click', function() {
              $.ajax({
-                 url:"http://104.236.182.128:5000/",
+                 url:"http://127.0.0.1:5000/login",
                  data: {
                      email: $(".zh-login-form").find("input[name=email]").val(),
                      password: $(".zh-login-form").find("input[name=password]").val(),
-                     test: "hah"
+                     check_code: $('.zh-login-form').find('input[name=check_code]').val()
                  },
-                 datatype: 'json',
+                 datatype: 'application/json',
                  success: function(data) {
                      location.href = "#"
                  }
              },
              type='post');
-         console.log($(".zh-login-form").find("input[name=email]").val())})
+         console.log($(".zh-login-form").find("input[name=email]").val())});
+         $('#register').on('click', function() {
+             $.ajax({
+                 url: 'http://127.0.0.1:5000/register',
+                 data: {
+                     name: $(".zh-register-form").find('input[name=name]').val(),
+                     email: $(".zh-register-form").find('input[name=email]').val(),
+                     password: $(".zh-register-form").find('input[name=password]').val(),
+                     check_code: $('.zh-register-form').find('input[name=check_code]').val()
+                 },
+                 datatype: 'application/json',
+                 success: function(data) {
+                     location.href = "#"
+                 }
+             },
+             type='post')
+         });
      });
  </script>
 

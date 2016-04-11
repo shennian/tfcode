@@ -21,6 +21,24 @@ class User(db.Model):
     def verity_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    @staticmethod
+    def generate_fake(count=100):
+        from sqlalchemy.exc import IntegrityError
+        from random import seed
+        import forgery_py
+
+        seed()
+        for i in range(count):
+            u = User(name=forgery_py.internet.user_name(True),
+                     email=forgery_py.internet.email_address(),
+                     password=forgery_py.lorem_ipsum.word(),
+                     role_id=2)
+            db.session.add(u)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+
 
 class Role(db.Model):
     __tablename__ = 'roles'
