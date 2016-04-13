@@ -530,6 +530,69 @@
           </div>
       </div>
     </div>
+
+    {% for post in posts %}
+        <div class="zh-container">
+      <div class="zh-vote">
+        <div class="zh-user-photo-vote">
+          <img src="static/1.jpg" alt="">
+        </div>
+        <div class="zh-vote-box">
+          <div class="zh-vote-approve" data-click-state="off">
+            <div>
+              <span class="ups-logo glyphicon glyphicon-triangle-top" aria-hidden="true"></span>
+            </div>
+            <div id = "ups">
+              <span>1</span>
+            </div>
+          </div>
+          <div class="zh-vote-disapprove" data-click-state="off">
+            <div class = "downs-logo">
+              <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="zh-content-box">
+          <div class="zh-content-header">
+            <span id = "user"><a href="#">知乎用户</a></span>
+            <span>回答了该问题</span>
+            <span>{{ post.time }}</span>
+          </div>
+          <div class="zh-content-body">
+            <div class="zh-content-title">
+              <a href="#">科比在最后一个赛季受到的待遇和追捧，詹姆斯退役时会受到吗?</a>
+            </div>
+            <div class="zh-content-summary">
+              {{ post.answer_content }}
+            </div>
+          </div>
+          <div class="zh-content-footer">
+            <span>
+              <a href="#">关注问题</a>
+            </span>
+            <span>
+              <a class="comment" data-click-state = "off" href="javascript:void(0)">添加评论</a>
+            </span>
+            <span>
+              <a href="#">感谢</a>
+            </span>
+            <span>
+              <a href="#">收藏</a>
+            </span>
+            <span>
+              <a href="#">没有帮助</a>
+            </span>
+            <span>
+              <a href="#">举报</a>
+            </span>
+            <span>
+              <a href="#">作者保留权利</a>
+            </span>
+          </div>
+      </div>
+    </div>
+    {% endfor %}
     <div class="test-zh-user-profile">
       <div class="triangle">
 
@@ -582,7 +645,6 @@
         </div>
       </div>
     </div>
-
     <div class="zh-comment-board">
       <div class="zh-comment-board-triangle">
 
