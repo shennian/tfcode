@@ -1,6 +1,6 @@
 import os
 from app import create_app, db
-from app.models import User, Role
+from app.models import User, Role, Answer, Question, Comment, CommentsCollection
 from flask.ext.script import Manager, Shell
 
 app = create_app('test')
@@ -8,7 +8,8 @@ manager = Manager(app)
 
 
 def make_shell_context():
-    return dict(app=app, db=db, User=User, Role=Role)
+    return dict(app=app, db=db, User=User, Role=Role, Answer=Answer, Question=Question, Comment=Comment,
+                CommentsCollection=CommentsCollection)
 
 manager.add_command("shell", Shell(make_context=make_shell_context))
 
@@ -18,5 +19,5 @@ if __name__ == '__main__':
     print 'fuck'
     app.run()
     '''
-    manager.run()
-    #app.run()
+    # manager.run()
+    app.run()

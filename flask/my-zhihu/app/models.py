@@ -9,6 +9,7 @@ class User(db.Model):
     email = db.Column(db.String(128), unique=True)
     password_hash = db.Column(db.String(128))
     role_id = db.Column(db.Integer)
+    introduction_words = db.Column(db.String(64))
 
     @property
     def password(self):
@@ -39,6 +40,13 @@ class User(db.Model):
             except IntegrityError:
                 db.session.rollback()
 
+    @staticmethod
+    def add_fake_introduction_words():
+        import forgery_py
+        for user in User.query.all():
+            user.introduction_words = forgery_py.lorem_ipsum.sentences(1)
+            #db.session.update(user)
+        db.session.commit()
 
 class Role(db.Model):
     __tablename__ = 'roles'
@@ -84,6 +92,19 @@ class Question(db.Model):
     user_id = db.Column(db.Integer)
     time = db.Column(db.TIMESTAMP)
 
+    @staticmethod
+    def generate_fake(count=100):
+        import forgery_py
+        import random
+        for i in range(count):
+            question = Question(question_labels_id=random.randint(1, 10),
+                                question_title=forgery_py.lorem_ipsum.title(random.randint(2, 6)),
+                                question_content=forgery_py.lorem_ipsum.words(3),
+                                user_id=random.randint(1, 100),
+                                time=forgery_py.date.date(True))
+            db.session.add(question)
+        db.session.commit()
+
 
 class QuestionLabel(db.Model):
     __tablename__ = 'question_labels'
@@ -114,10 +135,42 @@ class Answer(db.Model):
     dislike_collection_id = db.Column(db.Integer)
 
 
+    @staticmethod
+    def generate_fake(count=100):
+        from random import seed, randint
+        import forgery_py
+
+        seed()
+        user_count = User.query.count()
+        for i in range(count):
+
+            answer = Answer(user_id=randint(0, user_count-1),
+                            time=forgery_py.date.date(True),
+                            answer_content=forgery_py.lorem_ipsum.sentences(randint(1, 3)),
+                            question_id=randint(1, 100),
+                            comments_collection_id=randint(1, 100),
+                            like_collection_id=randint(1, 100),
+                            dislike_collection_id=randint(1, 100))
+
+            db.session.add(answer)
+        db.session.commit()
+
+
 class CommentsCollection(db.Model):
     __tablename__ = 'comments_collection'
     id = db.Column(db.Integer, primary_key=True)
     comment_id = db.Column(db.Integer)
+
+    @staticmethod
+    def generate_fake(count=1000):
+        import random
+        for i in range(count):
+            link = CommentsCollection(
+                id=random.randint(1, 100),
+                comment_id=random.randint(1, 1000)
+            )
+            db.session.add(link)
+        db.session.commit()
 
 
 class Comment(db.Model):
@@ -129,6 +182,20 @@ class Comment(db.Model):
     likes_count = db.Column(db.Integer)
 
     comment_author_id = db.Column(db.Integer)
+
+    @staticmethod
+    def generate_fake(count=900):
+        import forgery_py
+        import random
+
+        for i in range(count):
+            comment = Comment(user_id=random.randint(1, 100),
+                              time=forgery_py.date.date(True),
+                              comment_content=forgery_py.lorem_ipsum.sentences(4),
+                              likes_count=random.randint(0, 10),
+                              comment_author_id=random.randint(1, 100))
+            db.session.add(comment)
+            db.session.commit()
 
 
 class LikeCollection(db.Model):

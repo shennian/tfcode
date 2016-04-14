@@ -555,13 +555,13 @@
       </div>
       <div class="zh-content-box">
           <div class="zh-content-header">
-            <span id = "user"><a href="#">知乎用户</a></span>
+            <span id = "user"><a href="#">{{ post.username }}</a></span>
             <span>回答了该问题</span>
             <span>{{ post.time }}</span>
           </div>
           <div class="zh-content-body">
             <div class="zh-content-title">
-              <a href="#">科比在最后一个赛季受到的待遇和追捧，詹姆斯退役时会受到吗?</a>
+              <a href="#">{{ post.question_title }}</a>
             </div>
             <div class="zh-content-summary">
               {{ post.answer_content }}
@@ -572,7 +572,7 @@
               <a href="#">关注问题</a>
             </span>
             <span>
-              <a class="comment" data-click-state = "off" href="javascript:void(0)">添加评论</a>
+              <a id="{{ post.answer_id }}" class="comment" data-click-state = "off" href="javascript:void(0)">添加评论</a>
             </span>
             <span>
               <a href="#">感谢</a>
@@ -649,20 +649,9 @@
       <div class="zh-comment-board-triangle">
 
       </div>
-      <div class="zh-comment-item">
+      <div class="zh-comment-item" style="display: none">
         <div><a href="#">匿名用户</a></div>
         同意 我从刚上大学的时候就觉得欧拉不是一般人 各个领域如数学力学流体光学都有他的重大发现，真的是勤奋的天才
-        <div>
-          <span>1赞</span>
-          <span><a href="#">回复</a></span>
-          <span><a href="#">点赞</a></span>
-          <span><a href="#">举报</a></span>
-          <span style="float: right">1年前</span>
-        </div>
-      </div>
-      <div class="zh-comment-item">
-        <div><a href="#">李坤鸿</a></div>
-        事实上我在写拉马努金那段时，忘了提到哈代评价拉马努金的这种天赋——历史上大概只有欧拉与雅可比堪可比拟。也就是说，欧拉很可能也具备拉马努金这种天赋。同时再考虑到欧拉除此以外还有别的天赋，想想就知道这是一种怎样浩瀚的牛逼……
         <div>
           <span>1赞</span>
           <span><a href="#">回复</a></span>
@@ -769,6 +758,22 @@
 
   <script>
     $(".comment").on("click", function() {
+        $('.zh-comment-item').slice(1).remove()
+        console.log($(this).attr('id'))
+        var id = $(this).attr('id')
+        $.ajax({
+            url: '/main/comment',
+            data: {
+                answer_id: id
+            },
+            success: function (data) {
+
+                $('.zh-comment-board')
+
+            }
+        }
+        );
+
       if ($(this).data("click-state") == "off") {
         $(this).parents(".zh-content-footer").after($(".zh-comment-board"));
         $(".zh-comment-board").show();
