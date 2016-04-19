@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>title</title>
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <style type="text/css">
+        .search-result {
+            width: 600px;
+            height: auto;
+            margin-top: 20px;
+        }
+        .search-title {
+            margin-top: 2px;
+            width: inherit;
+            height: auto;
+            font-size: 20px;
+        }
+        .search-title a {
+            text-decoration: none;
+        }
+        .search-link {
+            width: inherit;
+            margin-top: 2px;
+            color: green;
+        }
+        .search-summary {
+            width: inherit;
+            margin-top: 2px;
+            color: lightgrey;
+        }
+        .search-commend {
+            width: 600px;
+            height: auto;
+            border-bottom: solid lightgrey 1px;
+            border-top: solid lightgrey 1px;
+            margin-top: 20px;
+        }
+        .search-commend li {
+            line-height: 30px;
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+            <a class="navbar-brand"  style="color: dodgerblue" href="#">Aloha</a>
+        </div>
+        <div class="col-xs-offset-1">
+            <form action="" class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" style="width: 400px;" placeholder="fuck">
+
+                </div>
+                <button class="btn btn-primary" type="submit"> search </button>
+            </form>
+        </div>
+    </nav>
+    <div style="border-bottom: solid lightgray 1px;">
+        <ul id="myTab" class="nav nav-tabs col-xs-offset-1">
+            <li class="active"><a href="#all" data-toggle="tab">
+                搜索结果</a>
+            </li>
+            <li><a href="#national" data-toggle="tab">国内</a></li>
+            <li><a href="#international" data-toggle="tab">国际</a></li>
+            <li><a href="#sports" data-toggle="tab">体育</a></li>
+            <li><a href="#entertainment" data-toggle="tab">娱乐</a></li>
+            <li><a href="#finance" data-toggle="tab">财经</a></li>
+        </ul>
+    </div>
+
+    <div id="myTabContent" class="tab-content col-xs-offset-1">
+        <div style="margin: 10px auto; font-size: small; color: lightgrey">
+            <p>获得 211 个结果</p>
+        </div>
+        <div class="tab-pane fade in active" id="all">
+            <div class="search-result">
+                <div class="search-title">
+                    <a href="">金三胖的一天</a>
+                </div>
+                <div class="search-link">
+                    <p>
+                        www.sanpan.com
+                    </p>
+                </div>
+                <div class="search-summary">
+                    <p>
+                        Donald Trump's campaign on Friday postponed a rally in Chicago amid fights between supporters and demonstrators, protests in the streets and concerns that the environment at the event was no longer safe.
+
+                        The announcement, which came amid large protests both inside and outside the event at the University of Illinois at Chicago, follows heightened concerns about violence in general at the GOP front-runner's rallies. Illinois holds its Republican primary on Tuesday.
+
+                        Hundreds of demonstrators packed into an arena, breaking out into protest even before Trump had shown up. At least five sections in the arena were filled with protesters.
+
+                        "Mr. Trump just arrived in Chicago, and after meeting with law enforcement, has determined that for the safety of all of the tens of thousands of people that have gathered in and around the arena, tonight's rally will be postponed to another date," the Trump campaign said in a statement. "Thank you very much for your attendance and please go in peace."
+                    </p>
+                </div>
+            </div>
+            <div class="search-result">
+                <div class="search-title">
+                    <a href="">金三胖的一天</a>
+                </div>
+                <div class="search-link">
+                    <p>
+                        www.sanpan.com
+                    </p>
+                </div>
+                <div class="search-summary">
+                    <p>
+                        Donald Trump's campaign on Friday postponed a rally in Chicago amid fights between supporters and demonstrators, protests in the streets and concerns that the environment at the event was no longer safe.
+
+                        The announcement, which came amid large protests both inside and outside the event at the University of Illinois at Chicago, follows heightened concerns about violence in general at the GOP front-runner's rallies. Illinois holds its Republican primary on Tuesday.
+
+                        Hundreds of demonstrators packed into an arena, breaking out into protest even before Trump had shown up. At least five sections in the arena were filled with protesters.
+
+                        "Mr. Trump just arrived in Chicago, and after meeting with law enforcement, has determined that for the safety of all of the tens of thousands of people that have gathered in and around the arena, tonight's rally will be postponed to another date," the Trump campaign said in a statement. "Thank you very much for your attendance and please go in peace."
+                    </p>
+                </div>
+            </div>
+            <div class="search-result">
+                <div class="search-title">
+                    <a href="">金三胖的一天</a>
+                </div>
+                <div class="search-link">
+                    <p>
+                        www.sanpan.com
+                    </p>
+                </div>
+                <div class="search-summary">
+                    <p>
+                        Donald Trump's campaign on Friday postponed a rally in Chicago amid fights between supporters and demonstrators, protests in the streets and concerns that the environment at the event was no longer safe.
+
+                        The announcement, which came amid large protests both inside and outside the event at the University of Illinois at Chicago, follows heightened concerns about violence in general at the GOP front-runner's rallies. Illinois holds its Republican primary on Tuesday.
+
+                        Hundreds of demonstrators packed into an arena, breaking out into protest even before Trump had shown up. At least five sections in the arena were filled with protesters.
+
+                        "Mr. Trump just arrived in Chicago, and after meeting with law enforcement, has determined that for the safety of all of the tens of thousands of people that have gathered in and around the arena, tonight's rally will be postponed to another date," the Trump campaign said in a statement. "Thank you very much for your attendance and please go in peace."
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="national">
+
+        </div>
+        <div class="tab-pane fade" id="international">
+
+        </div>
+        <div class="tab-pane fade" id="sports">
+
+        </div>
+        <div class="tab-pane fade" id="entertainment">
+
+        </div>
+        <div class="tab-pane fade" id="finance">
+
+        </div>
+        <div class="search-commend">
+            <h3 style="color: lightgrey">commend</h3>
+            <li><a href="">fdsfds</a></li>
+            <li><a href="">fdsfds</a></li>
+            <li><a href="">fdsfds</a></li>
+            <li><a href="">fdsfds</a></li>
+            <li><a href="">fdsfds</a></li>
+
+        </div>
+        <div class="pages" style="margin-left: 200px">
+            <ul class="pagination">
+                <li><a href="#">&laquo;</a></li>
+                <li class="active"><a href="#">1</a></li>
+                <li class="disabled"><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">&raquo;</a></li>
+            </ul>
+
+        </div>
+
+    </div>
+    <script>
+        $(function () {
+            $('#myTab li:eq(0) a').tab('show');
+        });
+    </script>
+
+</body>
+</html>
