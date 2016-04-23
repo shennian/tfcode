@@ -1,0 +1,987 @@
+1
+mysql> select maker, count(maker) from t group by maker having count(type) = 1 and type = 'laptop';
+1054 - Unknown column 'type' in 'having clause'
+mysql> select maker, count(maker) from t group by maker, type having count(type) = 1;
++-------+--------------+
+| maker | count(maker) |
++-------+--------------+
+| a     |            1 |
+| a     |            1 |
+| b     |            1 |
+| b     |            1 |
+| c     |            1 |
+| d     |            1 |
+| d     |            1 |
+| e     |            1 |
+| e     |            1 |
+| e     |            1 |
+| f     |            1 |
+| g     |            1 |
+| h     |            1 |
++-------+--------------+
+13 rows in set
+
+mysql> select maker, count(maker) from t group by maker having count(type) = 1;
++-------+--------------+
+| maker | count(maker) |
++-------+--------------+
+| c     |            1 |
+| f     |            1 |
+| g     |            1 |
+| h     |            1 |
++-------+--------------+
+4 rows in set
+
+mysql> select maker, count(maker) from t group by maker;
++-------+--------------+
+| maker | count(maker) |
++-------+--------------+
+| a     |            2 |
+| b     |            2 |
+| c     |            1 |
+| d     |            2 |
+| e     |            3 |
+| f     |            1 |
+| g     |            1 |
+| h     |            1 |
++-------+--------------+
+8 rows in set
+
+mysql> select maker, count(maker) from t group by maker where type = 'laptop';
+1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where type = 'laptop'' at line 1
+mysql> select maker, type from t group by maker having count(type) = 1;
++-------+---------+
+| maker | type    |
++-------+---------+
+| c     | pc      |
+| f     | laptop  |
+| g     | laptop  |
+| h     | printer |
++-------+---------+
+4 rows in set
+
+mysql> select maker, type from t where type = 'pc'g roup by maker having count(type) = 1;
+1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'g roup by maker having count(type) = 1' at line 1
+mysql> select maker, type from t where type = 'pc' group by maker having count(type) = 1;
++-------+------+
+| maker | type |
++-------+------+
+| a     | pc   |
+| b     | pc   |
+| c     | pc   |
+| d     | pc   |
+| e     | pc   |
++-------+------+
+5 rows in set
+
+mysql> select maker from (select maker, type from t group by maker having count(type) = 1) where type = 'laptop';
+1248 - Every derived table must have its own alias
+mysql> select maker from 
+(select maker, type from t group by maker having count(type) = 1) where type = 'laptop';
+1248 - Every derived table must have its own alias
+1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ' type from t group by maker having count(type) = 1) where type = 'laptop'' at line 1
+    -> , type from t group by maker having count(type) = 1) where type = 'laptop';
+1248 - Every derived table must have its own alias;
+1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1248 - Every derived table must have its own alias
+
+, type from t group by ma' at line 1
+1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1248 - Every derived table must have its own alias' at line 1
+mysql> select maker, type from t where type = 'pc' group by maker having count(type) = 1;
++-------+------+
+| maker | type |
++-------+------+
+| a     | pc   |
+| b     | pc   |
+| c     | pc   |
+| d     | pc   |
+| e     | pc   |
++-------+------+
+5 rows in set
+
+mysql> create view t1 as
+    -> select maker, type from t group by maker having count(type) = 1;
+Query OK, 0 rows affected
+
+mysql> select maker from t1 where type = 'laptop';
++-------+
+| maker |
++-------+
+| f     |
+| g     |
++-------+
+2 rows in set
+
+mysql> drop view t;
+Query OK, 0 rows affected
+
+mysql> drop view t1;
+Query OK, 0 rows affected
+
+mysql> create view u as
+    -> select maker, type from product;
+Query OK, 0 rows affected
+
+mysql> create view v as
+    -> select maker, type from t group by maker having count(type) = 1;
+1146 - Table 'sen_flask_db.t' doesn't exist
+mysql> select maker, type from u group by maker having count(type) = 1;
++-------+--------+
+| maker | type   |
++-------+--------+
+| c     | pc     |
+| g     | laptop |
++-------+--------+
+2 rows in set
+
+mysql> create view v as
+    -> select maker, type from u group by maker having count(type) = 1;
+Query OK, 0 rows affected
+
+mysql> select maker from v where type = 'laptop';
++-------+
+| maker |
++-------+
+| g     |
++-------+
+1 row in set
+
+mysql> drop view u, u;
+1066 - Not unique table/alias: 'u'
+mysql> drop view u v;
+1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'v' at line 1
+mysql> drop view u, v;
+Query OK, 0 rows affected
+
+mysql> create view u as
+    -> select maker, type from product;
+Query OK, 0 rows affected
+
+mysql> create view v as
+    -> select maker, type from u group by maker having count(type) = 1;
+Query OK, 0 rows affected
+
+mysql> select maker from u where type = 'laptop';
++-------+
+| maker |
++-------+
+| a     |
+| a     |
+| a     |
+| b     |
+| e     |
+| e     |
+| e     |
+| f     |
+| f     |
+| g     |
++-------+
+10 rows in set
+
+mysql> select maker from v where type = 'laptop';
++-------+
+| maker |
++-------+
+| g     |
++-------+
+1 row in set
+
+mysql> drop view v, u;
+Query OK, 0 rows affected
+
+mysql> create view u as
+    -> select distinct maker, type from product;
+Query OK, 0 rows affected
+
+mysql> select * from  t;
+1146 - Table 'sen_flask_db.t' doesn't exist
+mysql> select * from u;
++-------+---------+
+| maker | type    |
++-------+---------+
+| a     | pc      |
+| a     | laptop  |
+| b     | pc      |
+| b     | laptop  |
+| c     | pc      |
+| d     | pc      |
+| d     | printer |
+| e     | pc      |
+| e     | laptop  |
+| e     | printer |
+| f     | laptop  |
+| g     | laptop  |
+| h     | printer |
++-------+---------+
+13 rows in set
+
+mysql> create view v as
+    -> select maker, type from u group by maker having count(type) = 1;
+Query OK, 0 rows affected
+
+mysql> select maker from v where type = 'laptop';
++-------+
+| maker |
++-------+
+| f     |
+| g     |
++-------+
+2 rows in set
+
+mysql> select * from product where  type = 'laptop' except select * from product where type != 'laptop';
+1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'except select * from product where type != 'laptop'' at line 1
+mysql> select maker from product where type = 'laptop' except select maker from product where type != 'laptop';
+1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'except select maker from product where type != 'laptop'' at line 1
+mysql> select distince maker from product where type = 'laptop';
+1054 - Unknown column 'distince' in 'field list'
+mysql> select distinct maker from product where type = 'laptop';
++-------+
+| maker |
++-------+
+| a     |
+| b     |
+| e     |
+| f     |
+| g     |
++-------+
+5 rows in set
+
+mysql> select distinct maker from product where
+type = 'laptop' and maker not in 
+(select distinct maker from product where
+type = 'pc');
++-------+
+| maker |
++-------+
+| f     |
+| g     |
++-------+
+2 rows in set
+
+mysql> select distinct maker from product where
+type = 'laptop' and maker not in (select distinct maker from product where type = 'pc')
+    -> ;
++-------+
+| maker |
++-------+
+| f     |
+| g     |
++-------+
+2 rows in set
+
+mysql> select distinct maker from product where
+type = 'laptop' and maker not in (select distinct maker from product where type = 'pc' and type = 'printer');
++-------+
+| maker |
++-------+
+| a     |
+| b     |
+| e     |
+| f     |
+| g     |
++-------+
+5 rows in set
+
+mysql> select distinct maker from product where
+type = 'laptop' and maker not in (select distinct maker from product where type = 'pc');
++-------+
+| maker |
++-------+
+| f     |
+| g     |
++-------+
+2 rows in set
+
+mysql> select distinct maker from product where
+type = 'laptop' and maker not in (select distinct maker from product where type = 'pc' and type = 'printer');
++-------+
+| maker |
++-------+
+| a     |
+| b     |
+| e     |
+| f     |
+| g     |
++-------+
+5 rows in set
+
+mysql> select distinct maker from product where type = 'pc' and type = 'printer';
+Empty set
+
+mysql> select distinct maker from product where
+type = 'laptop' and maker not in (select distinct maker from product where type = 'pc', select distinct maker from product where type = 'laptop');
+1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ' select distinct maker from product where type = 'laptop')' at line 2
+mysql> select distinct maker from product where
+type = 'laptop' and maker not in (select distinct maker from product where type = 'pc' and select distinct maker from product where type = 'printer');
+1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select distinct maker from product where type = 'printer')' at line 2
+mysql> select distinct maker from product where
+type = 'laptop' and maker not in (select distinct maker from product where type = 'pc') and not in (select distinct maker from product where type = 'printer');
+1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'in (select distinct maker from product where type = 'printer')' at line 2
+mysql> select distinct maker from product where
+type = 'laptop' and maker not in (select distinct maker from product where type = 'pc') and (select distinct maker from product where type = 'printer');
+1242 - Subquery returns more than 1 row
+mysql> select distinct maker from product where
+type = 'laptop' and maker not in ((select distinct maker from product where type = 'pc') and (select distinct maker from product where type = 'printer'));
+1242 - Subquery returns more than 1 row
+mysql> select distinct maker from product where
+type = 'laptop' and maker not in ((select distinct maker from product where type = 'pc') and (select distinct maker from product where type = 'printer')); 
+1242 - Subquery returns more than 1 row
+mysql> select hd from pc group by hd having count(hd) <= 2;
++-----+
+| hd  |
++-----+
+|  80 |
+| 160 |
+| 300 |
+| 320 |
++-----+
+4 rows in set
+
+mysql> select * from pc group by hd;
++-------+-------+------+-----+-------+
+| model | speed | ram  | hd  | price |
++-------+-------+------+-----+-------+
+| 1003  |  1.42 |  512 |  80 | 478   |
+| 1011  |  1.86 | 2048 | 160 | 959   |
+| 1001  |  2.66 | 1024 | 250 | 2114  |
+| 1010  |   2.8 | 2048 | 300 | 770   |
+| 1006  |   3.2 | 1024 | 320 | 1049  |
++-------+-------+------+-----+-------+
+5 rows in set
+
+mysql> select hd, count(hd) from pc group by hd;
++-----+-----------+
+| hd  | count(hd) |
++-----+-----------+
+|  80 |         2 |
+| 160 |         2 |
+| 250 |         7 |
+| 300 |         1 |
+| 320 |         1 |
++-----+-----------+
+5 rows in set
+
+mysql> select hd from pc group by hd having count(hd) <= 2;
++-----+
+| hd  |
++-----+
+|  80 |
+| 160 |
+| 200 |
+| 300 |
+| 320 |
++-----+
+5 rows in set
+
+mysql> select p.model q.model from pc as p, pc as q;
+1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.model from pc as p, pc as q' at line 1
+mysql> select p.model q.model from pc as p, pc as q where p.hd = q.hd;
+1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.model from pc as p, pc as q where p.hd = q.hd' at line 1
+mysql> select p.model from pc as p, pc as q where p.hd = q.hd;
++-------+
+| model |
++-------+
+| 1001  |
+| 1002  |
+| 1004  |
+| 1005  |
+| 1008  |
+| 1009  |
+| 1001  |
+| 1002  |
+| 1004  |
+| 1005  |
+| 1008  |
+| 1009  |
+| 1003  |
+| 1013  |
+| 1001  |
+| 1002  |
+| 1004  |
+| 1005  |
+| 1008  |
+| 1009  |
+| 1001  |
+| 1002  |
+| 1004  |
+| 1005  |
+| 1008  |
+| 1009  |
+| 1006  |
+| 1007  |
+| 1001  |
+| 1002  |
+| 1004  |
+| 1005  |
+| 1008  |
+| 1009  |
+| 1001  |
+| 1002  |
+| 1004  |
+| 1005  |
+| 1008  |
+| 1009  |
+| 1010  |
+| 1011  |
+| 1012  |
+| 1011  |
+| 1012  |
+| 1003  |
+| 1013  |
++-------+
+47 rows in set
+
+mysql> select p.model from pc as p, pc as q where p.hd = q.hd and p.speed = q.speed;
++-------+
+| model |
++-------+
+| 1001  |
+| 1002  |
+| 1003  |
+| 1004  |
+| 1005  |
+| 1006  |
+| 1007  |
+| 1008  |
+| 1009  |
+| 1010  |
+| 1011  |
+| 1012  |
+| 1013  |
++-------+
+13 rows in set
+
+mysql> select p.model from pc as p, pc as q where p.ram = q.ram and p.speed = q.speed;
++-------+
+| model |
++-------+
+| 1001  |
+| 1002  |
+| 1003  |
+| 1004  |
+| 1012  |
+| 1005  |
+| 1006  |
+| 1007  |
+| 1008  |
+| 1009  |
+| 1010  |
+| 1011  |
+| 1004  |
+| 1012  |
+| 1013  |
++-------+
+15 rows in set
+
+mysql> select * from pc as p, pc as q where p.ram = q.ram and p.speed = q.speed;
++-------+-------+------+-----+-------+-------+-------+------+-----+-------+
+| model | speed | ram  | hd  | price | model | speed | ram  | hd  | price |
++-------+-------+------+-----+-------+-------+-------+------+-----+-------+
+| 1001  |  2.66 | 1024 | 250 | 2114  | 1001  |  2.66 | 1024 | 250 | 2114  |
+| 1002  |   2.1 |  512 | 250 | 995   | 1002  |   2.1 |  512 | 250 | 995   |
+| 1003  |  1.42 |  512 |  80 | 478   | 1003  |  1.42 |  512 |  80 | 478   |
+| 1004  |   2.8 | 1024 | 250 | 649   | 1004  |   2.8 | 1024 | 250 | 649   |
+| 1012  |   2.8 | 1024 | 160 | 649   | 1004  |   2.8 | 1024 | 250 | 649   |
+| 1005  |   3.2 |  512 | 250 | 630   | 1005  |   3.2 |  512 | 250 | 630   |
+| 1006  |   3.2 | 1024 | 320 | 1049  | 1006  |   3.2 | 1024 | 320 | 1049  |
+| 1007  |   2.2 | 1024 | 200 | 510   | 1007  |   2.2 | 1024 | 200 | 510   |
+| 1008  |   2.2 | 2048 | 250 | 770   | 1008  |   2.2 | 2048 | 250 | 770   |
+| 1009  |     2 | 1024 | 250 | 650   | 1009  |     2 | 1024 | 250 | 650   |
+| 1010  |   2.8 | 2048 | 300 | 770   | 1010  |   2.8 | 2048 | 300 | 770   |
+| 1011  |  1.86 | 2048 | 160 | 959   | 1011  |  1.86 | 2048 | 160 | 959   |
+| 1004  |   2.8 | 1024 | 250 | 649   | 1012  |   2.8 | 1024 | 160 | 649   |
+| 1012  |   2.8 | 1024 | 160 | 649   | 1012  |   2.8 | 1024 | 160 | 649   |
+| 1013  |  3.06 |  512 |  80 | 529   | 1013  |  3.06 |  512 |  80 | 529   |
++-------+-------+------+-----+-------+-------+-------+------+-----+-------+
+15 rows in set
+
+mysql> select * from pc as p, pc as q where p.ram = q.ram or p.speed = q.speed;
++-------+-------+------+-----+-------+-------+-------+------+-----+-------+
+| model | speed | ram  | hd  | price | model | speed | ram  | hd  | price |
++-------+-------+------+-----+-------+-------+-------+------+-----+-------+
+| 1001  |  2.66 | 1024 | 250 | 2114  | 1001  |  2.66 | 1024 | 250 | 2114  |
+| 1004  |   2.8 | 1024 | 250 | 649   | 1001  |  2.66 | 1024 | 250 | 2114  |
+| 1006  |   3.2 | 1024 | 320 | 1049  | 1001  |  2.66 | 1024 | 250 | 2114  |
+| 1007  |   2.2 | 1024 | 200 | 510   | 1001  |  2.66 | 1024 | 250 | 2114  |
+| 1009  |     2 | 1024 | 250 | 650   | 1001  |  2.66 | 1024 | 250 | 2114  |
+| 1012  |   2.8 | 1024 | 160 | 649   | 1001  |  2.66 | 1024 | 250 | 2114  |
+| 1002  |   2.1 |  512 | 250 | 995   | 1002  |   2.1 |  512 | 250 | 995   |
+| 1003  |  1.42 |  512 |  80 | 478   | 1002  |   2.1 |  512 | 250 | 995   |
+| 1005  |   3.2 |  512 | 250 | 630   | 1002  |   2.1 |  512 | 250 | 995   |
+| 1013  |  3.06 |  512 |  80 | 529   | 1002  |   2.1 |  512 | 250 | 995   |
+| 1002  |   2.1 |  512 | 250 | 995   | 1003  |  1.42 |  512 |  80 | 478   |
+| 1003  |  1.42 |  512 |  80 | 478   | 1003  |  1.42 |  512 |  80 | 478   |
+| 1005  |   3.2 |  512 | 250 | 630   | 1003  |  1.42 |  512 |  80 | 478   |
+| 1013  |  3.06 |  512 |  80 | 529   | 1003  |  1.42 |  512 |  80 | 478   |
+| 1001  |  2.66 | 1024 | 250 | 2114  | 1004  |   2.8 | 1024 | 250 | 649   |
+| 1004  |   2.8 | 1024 | 250 | 649   | 1004  |   2.8 | 1024 | 250 | 649   |
+| 1006  |   3.2 | 1024 | 320 | 1049  | 1004  |   2.8 | 1024 | 250 | 649   |
+| 1007  |   2.2 | 1024 | 200 | 510   | 1004  |   2.8 | 1024 | 250 | 649   |
+| 1009  |     2 | 1024 | 250 | 650   | 1004  |   2.8 | 1024 | 250 | 649   |
+| 1010  |   2.8 | 2048 | 300 | 770   | 1004  |   2.8 | 1024 | 250 | 649   |
+| 1012  |   2.8 | 1024 | 160 | 649   | 1004  |   2.8 | 1024 | 250 | 649   |
+| 1002  |   2.1 |  512 | 250 | 995   | 1005  |   3.2 |  512 | 250 | 630   |
+| 1003  |  1.42 |  512 |  80 | 478   | 1005  |   3.2 |  512 | 250 | 630   |
+| 1005  |   3.2 |  512 | 250 | 630   | 1005  |   3.2 |  512 | 250 | 630   |
+| 1006  |   3.2 | 1024 | 320 | 1049  | 1005  |   3.2 |  512 | 250 | 630   |
+| 1013  |  3.06 |  512 |  80 | 529   | 1005  |   3.2 |  512 | 250 | 630   |
+| 1001  |  2.66 | 1024 | 250 | 2114  | 1006  |   3.2 | 1024 | 320 | 1049  |
+| 1004  |   2.8 | 1024 | 250 | 649   | 1006  |   3.2 | 1024 | 320 | 1049  |
+| 1005  |   3.2 |  512 | 250 | 630   | 1006  |   3.2 | 1024 | 320 | 1049  |
+| 1006  |   3.2 | 1024 | 320 | 1049  | 1006  |   3.2 | 1024 | 320 | 1049  |
+| 1007  |   2.2 | 1024 | 200 | 510   | 1006  |   3.2 | 1024 | 320 | 1049  |
+| 1009  |     2 | 1024 | 250 | 650   | 1006  |   3.2 | 1024 | 320 | 1049  |
+| 1012  |   2.8 | 1024 | 160 | 649   | 1006  |   3.2 | 1024 | 320 | 1049  |
+| 1001  |  2.66 | 1024 | 250 | 2114  | 1007  |   2.2 | 1024 | 200 | 510   |
+| 1004  |   2.8 | 1024 | 250 | 649   | 1007  |   2.2 | 1024 | 200 | 510   |
+| 1006  |   3.2 | 1024 | 320 | 1049  | 1007  |   2.2 | 1024 | 200 | 510   |
+| 1007  |   2.2 | 1024 | 200 | 510   | 1007  |   2.2 | 1024 | 200 | 510   |
+| 1008  |   2.2 | 2048 | 250 | 770   | 1007  |   2.2 | 1024 | 200 | 510   |
+| 1009  |     2 | 1024 | 250 | 650   | 1007  |   2.2 | 1024 | 200 | 510   |
+| 1012  |   2.8 | 1024 | 160 | 649   | 1007  |   2.2 | 1024 | 200 | 510   |
+| 1007  |   2.2 | 1024 | 200 | 510   | 1008  |   2.2 | 2048 | 250 | 770   |
+| 1008  |   2.2 | 2048 | 250 | 770   | 1008  |   2.2 | 2048 | 250 | 770   |
+| 1010  |   2.8 | 2048 | 300 | 770   | 1008  |   2.2 | 2048 | 250 | 770   |
+| 1011  |  1.86 | 2048 | 160 | 959   | 1008  |   2.2 | 2048 | 250 | 770   |
+| 1001  |  2.66 | 1024 | 250 | 2114  | 1009  |     2 | 1024 | 250 | 650   |
+| 1004  |   2.8 | 1024 | 250 | 649   | 1009  |     2 | 1024 | 250 | 650   |
+| 1006  |   3.2 | 1024 | 320 | 1049  | 1009  |     2 | 1024 | 250 | 650   |
+| 1007  |   2.2 | 1024 | 200 | 510   | 1009  |     2 | 1024 | 250 | 650   |
+| 1009  |     2 | 1024 | 250 | 650   | 1009  |     2 | 1024 | 250 | 650   |
+| 1012  |   2.8 | 1024 | 160 | 649   | 1009  |     2 | 1024 | 250 | 650   |
+| 1004  |   2.8 | 1024 | 250 | 649   | 1010  |   2.8 | 2048 | 300 | 770   |
+| 1008  |   2.2 | 2048 | 250 | 770   | 1010  |   2.8 | 2048 | 300 | 770   |
+| 1010  |   2.8 | 2048 | 300 | 770   | 1010  |   2.8 | 2048 | 300 | 770   |
+| 1011  |  1.86 | 2048 | 160 | 959   | 1010  |   2.8 | 2048 | 300 | 770   |
+| 1012  |   2.8 | 1024 | 160 | 649   | 1010  |   2.8 | 2048 | 300 | 770   |
+| 1008  |   2.2 | 2048 | 250 | 770   | 1011  |  1.86 | 2048 | 160 | 959   |
+| 1010  |   2.8 | 2048 | 300 | 770   | 1011  |  1.86 | 2048 | 160 | 959   |
+| 1011  |  1.86 | 2048 | 160 | 959   | 1011  |  1.86 | 2048 | 160 | 959   |
+| 1001  |  2.66 | 1024 | 250 | 2114  | 1012  |   2.8 | 1024 | 160 | 649   |
+| 1004  |   2.8 | 1024 | 250 | 649   | 1012  |   2.8 | 1024 | 160 | 649   |
+| 1006  |   3.2 | 1024 | 320 | 1049  | 1012  |   2.8 | 1024 | 160 | 649   |
+| 1007  |   2.2 | 1024 | 200 | 510   | 1012  |   2.8 | 1024 | 160 | 649   |
+| 1009  |     2 | 1024 | 250 | 650   | 1012  |   2.8 | 1024 | 160 | 649   |
+| 1010  |   2.8 | 2048 | 300 | 770   | 1012  |   2.8 | 1024 | 160 | 649   |
+| 1012  |   2.8 | 1024 | 160 | 649   | 1012  |   2.8 | 1024 | 160 | 649   |
+| 1002  |   2.1 |  512 | 250 | 995   | 1013  |  3.06 |  512 |  80 | 529   |
+| 1003  |  1.42 |  512 |  80 | 478   | 1013  |  3.06 |  512 |  80 | 529   |
+| 1005  |   3.2 |  512 | 250 | 630   | 1013  |  3.06 |  512 |  80 | 529   |
+| 1013  |  3.06 |  512 |  80 | 529   | 1013  |  3.06 |  512 |  80 | 529   |
++-------+-------+------+-----+-------+-------+-------+------+-----+-------+
+69 rows in set
+
+mysql> select p.model from pc as p, pc as q where p.ram = q.ram or p.speed = q.speed;
++-------+
+| model |
++-------+
+| 1001  |
+| 1004  |
+| 1006  |
+| 1007  |
+| 1009  |
+| 1012  |
+| 1002  |
+| 1003  |
+| 1005  |
+| 1013  |
+| 1002  |
+| 1003  |
+| 1005  |
+| 1013  |
+| 1001  |
+| 1004  |
+| 1006  |
+| 1007  |
+| 1009  |
+| 1010  |
+| 1012  |
+| 1002  |
+| 1003  |
+| 1005  |
+| 1006  |
+| 1013  |
+| 1001  |
+| 1004  |
+| 1005  |
+| 1006  |
+| 1007  |
+| 1009  |
+| 1012  |
+| 1001  |
+| 1004  |
+| 1006  |
+| 1007  |
+| 1008  |
+| 1009  |
+| 1012  |
+| 1007  |
+| 1008  |
+| 1010  |
+| 1011  |
+| 1001  |
+| 1004  |
+| 1006  |
+| 1007  |
+| 1009  |
+| 1012  |
+| 1004  |
+| 1008  |
+| 1010  |
+| 1011  |
+| 1012  |
+| 1008  |
+| 1010  |
+| 1011  |
+| 1001  |
+| 1004  |
+| 1006  |
+| 1007  |
+| 1009  |
+| 1010  |
+| 1012  |
+| 1002  |
+| 1003  |
+| 1005  |
+| 1013  |
++-------+
+69 rows in set
+
+mysql> select distinct p.model from pc as p, pc as q where p.ram = q.ram or p.speed = q.speed;
++-------+
+| model |
++-------+
+| 1001  |
+| 1004  |
+| 1006  |
+| 1007  |
+| 1009  |
+| 1012  |
+| 1002  |
+| 1003  |
+| 1005  |
+| 1013  |
+| 1010  |
+| 1008  |
+| 1011  |
++-------+
+13 rows in set
+
+mysql> select distinct p.model from pc as p, pc as q where (p.ram = q.ram or p.speed = q.speed) and p.model != q.model;
++-------+
+| model |
++-------+
+| 1004  |
+| 1006  |
+| 1007  |
+| 1009  |
+| 1012  |
+| 1003  |
+| 1005  |
+| 1013  |
+| 1002  |
+| 1001  |
+| 1010  |
+| 1008  |
+| 1011  |
++-------+
+13 rows in set
+
+mysql> select distinct (*) from pc as p, pc as q where (p.ram = q.ram or p.speed = q.speed) and p.model != q.model;
+1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '*) from pc as p, pc as q where (p.ram = q.ram or p.speed = q.speed) and p.model ' at line 1
+mysql> select distinct model, * from pc as p, pc as q where (p.ram = q.ram or p.speed = q.speed) and p.model != q.model;
+1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '* from pc as p, pc as q where (p.ram = q.ram or p.speed = q.speed) and p.model !' at line 1
+mysql> select * from pc as p, pc as q where (p.ram = q.ram or p.speed = q.speed) and p.model != q.model;
++-------+-------+------+-----+-------+-------+-------+------+-----+-------+
+| model | speed | ram  | hd  | price | model | speed | ram  | hd  | price |
++-------+-------+------+-----+-------+-------+-------+------+-----+-------+
+| 1004  |   2.8 | 1024 | 250 | 649   | 1001  |  2.66 | 1024 | 250 | 2114  |
+| 1006  |   3.2 | 1024 | 320 | 1049  | 1001  |  2.66 | 1024 | 250 | 2114  |
+| 1007  |   2.2 | 1024 | 200 | 510   | 1001  |  2.66 | 1024 | 250 | 2114  |
+| 1009  |     2 | 1024 | 250 | 650   | 1001  |  2.66 | 1024 | 250 | 2114  |
+| 1012  |   2.8 | 1024 | 160 | 649   | 1001  |  2.66 | 1024 | 250 | 2114  |
+| 1003  |  1.42 |  512 |  80 | 478   | 1002  |   2.1 |  512 | 250 | 995   |
+| 1005  |   3.2 |  512 | 250 | 630   | 1002  |   2.1 |  512 | 250 | 995   |
+| 1013  |  3.06 |  512 |  80 | 529   | 1002  |   2.1 |  512 | 250 | 995   |
+| 1002  |   2.1 |  512 | 250 | 995   | 1003  |  1.42 |  512 |  80 | 478   |
+| 1005  |   3.2 |  512 | 250 | 630   | 1003  |  1.42 |  512 |  80 | 478   |
+| 1013  |  3.06 |  512 |  80 | 529   | 1003  |  1.42 |  512 |  80 | 478   |
+| 1001  |  2.66 | 1024 | 250 | 2114  | 1004  |   2.8 | 1024 | 250 | 649   |
+| 1006  |   3.2 | 1024 | 320 | 1049  | 1004  |   2.8 | 1024 | 250 | 649   |
+| 1007  |   2.2 | 1024 | 200 | 510   | 1004  |   2.8 | 1024 | 250 | 649   |
+| 1009  |     2 | 1024 | 250 | 650   | 1004  |   2.8 | 1024 | 250 | 649   |
+| 1010  |   2.8 | 2048 | 300 | 770   | 1004  |   2.8 | 1024 | 250 | 649   |
+| 1012  |   2.8 | 1024 | 160 | 649   | 1004  |   2.8 | 1024 | 250 | 649   |
+| 1002  |   2.1 |  512 | 250 | 995   | 1005  |   3.2 |  512 | 250 | 630   |
+| 1003  |  1.42 |  512 |  80 | 478   | 1005  |   3.2 |  512 | 250 | 630   |
+| 1006  |   3.2 | 1024 | 320 | 1049  | 1005  |   3.2 |  512 | 250 | 630   |
+| 1013  |  3.06 |  512 |  80 | 529   | 1005  |   3.2 |  512 | 250 | 630   |
+| 1001  |  2.66 | 1024 | 250 | 2114  | 1006  |   3.2 | 1024 | 320 | 1049  |
+| 1004  |   2.8 | 1024 | 250 | 649   | 1006  |   3.2 | 1024 | 320 | 1049  |
+| 1005  |   3.2 |  512 | 250 | 630   | 1006  |   3.2 | 1024 | 320 | 1049  |
+| 1007  |   2.2 | 1024 | 200 | 510   | 1006  |   3.2 | 1024 | 320 | 1049  |
+| 1009  |     2 | 1024 | 250 | 650   | 1006  |   3.2 | 1024 | 320 | 1049  |
+| 1012  |   2.8 | 1024 | 160 | 649   | 1006  |   3.2 | 1024 | 320 | 1049  |
+| 1001  |  2.66 | 1024 | 250 | 2114  | 1007  |   2.2 | 1024 | 200 | 510   |
+| 1004  |   2.8 | 1024 | 250 | 649   | 1007  |   2.2 | 1024 | 200 | 510   |
+| 1006  |   3.2 | 1024 | 320 | 1049  | 1007  |   2.2 | 1024 | 200 | 510   |
+| 1008  |   2.2 | 2048 | 250 | 770   | 1007  |   2.2 | 1024 | 200 | 510   |
+| 1009  |     2 | 1024 | 250 | 650   | 1007  |   2.2 | 1024 | 200 | 510   |
+| 1012  |   2.8 | 1024 | 160 | 649   | 1007  |   2.2 | 1024 | 200 | 510   |
+| 1007  |   2.2 | 1024 | 200 | 510   | 1008  |   2.2 | 2048 | 250 | 770   |
+| 1010  |   2.8 | 2048 | 300 | 770   | 1008  |   2.2 | 2048 | 250 | 770   |
+| 1011  |  1.86 | 2048 | 160 | 959   | 1008  |   2.2 | 2048 | 250 | 770   |
+| 1001  |  2.66 | 1024 | 250 | 2114  | 1009  |     2 | 1024 | 250 | 650   |
+| 1004  |   2.8 | 1024 | 250 | 649   | 1009  |     2 | 1024 | 250 | 650   |
+| 1006  |   3.2 | 1024 | 320 | 1049  | 1009  |     2 | 1024 | 250 | 650   |
+| 1007  |   2.2 | 1024 | 200 | 510   | 1009  |     2 | 1024 | 250 | 650   |
+| 1012  |   2.8 | 1024 | 160 | 649   | 1009  |     2 | 1024 | 250 | 650   |
+| 1004  |   2.8 | 1024 | 250 | 649   | 1010  |   2.8 | 2048 | 300 | 770   |
+| 1008  |   2.2 | 2048 | 250 | 770   | 1010  |   2.8 | 2048 | 300 | 770   |
+| 1011  |  1.86 | 2048 | 160 | 959   | 1010  |   2.8 | 2048 | 300 | 770   |
+| 1012  |   2.8 | 1024 | 160 | 649   | 1010  |   2.8 | 2048 | 300 | 770   |
+| 1008  |   2.2 | 2048 | 250 | 770   | 1011  |  1.86 | 2048 | 160 | 959   |
+| 1010  |   2.8 | 2048 | 300 | 770   | 1011  |  1.86 | 2048 | 160 | 959   |
+| 1001  |  2.66 | 1024 | 250 | 2114  | 1012  |   2.8 | 1024 | 160 | 649   |
+| 1004  |   2.8 | 1024 | 250 | 649   | 1012  |   2.8 | 1024 | 160 | 649   |
+| 1006  |   3.2 | 1024 | 320 | 1049  | 1012  |   2.8 | 1024 | 160 | 649   |
+| 1007  |   2.2 | 1024 | 200 | 510   | 1012  |   2.8 | 1024 | 160 | 649   |
+| 1009  |     2 | 1024 | 250 | 650   | 1012  |   2.8 | 1024 | 160 | 649   |
+| 1010  |   2.8 | 2048 | 300 | 770   | 1012  |   2.8 | 1024 | 160 | 649   |
+| 1002  |   2.1 |  512 | 250 | 995   | 1013  |  3.06 |  512 |  80 | 529   |
+| 1003  |  1.42 |  512 |  80 | 478   | 1013  |  3.06 |  512 |  80 | 529   |
+| 1005  |   3.2 |  512 | 250 | 630   | 1013  |  3.06 |  512 |  80 | 529   |
++-------+-------+------+-----+-------+-------+-------+------+-----+-------+
+56 rows in set
+
+mysql> select p.model, q.model from pc as p, pc as q where (p.ram = q.ram or p.speed = q.speed) and p.model != q.model;
++-------+-------+
+| model | model |
++-------+-------+
+| 1004  | 1001  |
+| 1006  | 1001  |
+| 1007  | 1001  |
+| 1009  | 1001  |
+| 1012  | 1001  |
+| 1003  | 1002  |
+| 1005  | 1002  |
+| 1013  | 1002  |
+| 1002  | 1003  |
+| 1005  | 1003  |
+| 1013  | 1003  |
+| 1001  | 1004  |
+| 1006  | 1004  |
+| 1007  | 1004  |
+| 1009  | 1004  |
+| 1010  | 1004  |
+| 1012  | 1004  |
+| 1002  | 1005  |
+| 1003  | 1005  |
+| 1006  | 1005  |
+| 1013  | 1005  |
+| 1001  | 1006  |
+| 1004  | 1006  |
+| 1005  | 1006  |
+| 1007  | 1006  |
+| 1009  | 1006  |
+| 1012  | 1006  |
+| 1001  | 1007  |
+| 1004  | 1007  |
+| 1006  | 1007  |
+| 1008  | 1007  |
+| 1009  | 1007  |
+| 1012  | 1007  |
+| 1007  | 1008  |
+| 1010  | 1008  |
+| 1011  | 1008  |
+| 1001  | 1009  |
+| 1004  | 1009  |
+| 1006  | 1009  |
+| 1007  | 1009  |
+| 1012  | 1009  |
+| 1004  | 1010  |
+| 1008  | 1010  |
+| 1011  | 1010  |
+| 1012  | 1010  |
+| 1008  | 1011  |
+| 1010  | 1011  |
+| 1001  | 1012  |
+| 1004  | 1012  |
+| 1006  | 1012  |
+| 1007  | 1012  |
+| 1009  | 1012  |
+| 1010  | 1012  |
+| 1002  | 1013  |
+| 1003  | 1013  |
+| 1005  | 1013  |
++-------+-------+
+56 rows in set
+
+mysql> select distinct p.model, q.model from pc as p, pc as q where (p.ram = q.ram or p.speed = q.speed) and p.model != q.model;
++-------+-------+
+| model | model |
++-------+-------+
+| 1004  | 1001  |
+| 1006  | 1001  |
+| 1007  | 1001  |
+| 1009  | 1001  |
+| 1012  | 1001  |
+| 1003  | 1002  |
+| 1005  | 1002  |
+| 1013  | 1002  |
+| 1002  | 1003  |
+| 1005  | 1003  |
+| 1013  | 1003  |
+| 1001  | 1004  |
+| 1006  | 1004  |
+| 1007  | 1004  |
+| 1009  | 1004  |
+| 1010  | 1004  |
+| 1012  | 1004  |
+| 1002  | 1005  |
+| 1003  | 1005  |
+| 1006  | 1005  |
+| 1013  | 1005  |
+| 1001  | 1006  |
+| 1004  | 1006  |
+| 1005  | 1006  |
+| 1007  | 1006  |
+| 1009  | 1006  |
+| 1012  | 1006  |
+| 1001  | 1007  |
+| 1004  | 1007  |
+| 1006  | 1007  |
+| 1008  | 1007  |
+| 1009  | 1007  |
+| 1012  | 1007  |
+| 1007  | 1008  |
+| 1010  | 1008  |
+| 1011  | 1008  |
+| 1001  | 1009  |
+| 1004  | 1009  |
+| 1006  | 1009  |
+| 1007  | 1009  |
+| 1012  | 1009  |
+| 1004  | 1010  |
+| 1008  | 1010  |
+| 1011  | 1010  |
+| 1012  | 1010  |
+| 1008  | 1011  |
+| 1010  | 1011  |
+| 1001  | 1012  |
+| 1004  | 1012  |
+| 1006  | 1012  |
+| 1007  | 1012  |
+| 1009  | 1012  |
+| 1010  | 1012  |
+| 1002  | 1013  |
+| 1003  | 1013  |
+| 1005  | 1013  |
++-------+-------+
+56 rows in set
+
+mysql> select distinct (p.model, q.model) from pc as p, pc as q where (p.ram = q.ram or p.speed = q.speed) and p.model != q.model;
+1241 - Operand should contain 1 column(s)
+mysql> select p.model, q.model from pc as p, pc as q where (p.ram = q.ram or p.speed = q.speed) and p.model != q.model;
++-------+-------+
+| model | model |
++-------+-------+
+| 1004  | 1001  |
+| 1006  | 1001  |
+| 1007  | 1001  |
+| 1009  | 1001  |
+| 1012  | 1001  |
+| 1003  | 1002  |
+| 1005  | 1002  |
+| 1013  | 1002  |
+| 1002  | 1003  |
+| 1005  | 1003  |
+| 1013  | 1003  |
+| 1001  | 1004  |
+| 1006  | 1004  |
+| 1007  | 1004  |
+| 1009  | 1004  |
+| 1010  | 1004  |
+| 1012  | 1004  |
+| 1002  | 1005  |
+| 1003  | 1005  |
+| 1006  | 1005  |
+| 1013  | 1005  |
+| 1001  | 1006  |
+| 1004  | 1006  |
+| 1005  | 1006  |
+| 1007  | 1006  |
+| 1009  | 1006  |
+| 1012  | 1006  |
+| 1001  | 1007  |
+| 1004  | 1007  |
+| 1006  | 1007  |
+| 1008  | 1007  |
+| 1009  | 1007  |
+| 1012  | 1007  |
+| 1007  | 1008  |
+| 1010  | 1008  |
+| 1011  | 1008  |
+| 1001  | 1009  |
+| 1004  | 1009  |
+| 1006  | 1009  |
+| 1007  | 1009  |
+| 1012  | 1009  |
+| 1004  | 1010  |
+| 1008  | 1010  |
+| 1011  | 1010  |
+| 1012  | 1010  |
+| 1008  | 1011  |
+| 1010  | 1011  |
+| 1001  | 1012  |
+| 1004  | 1012  |
+| 1006  | 1012  |
+| 1007  | 1012  |
+| 1009  | 1012  |
+| 1010  | 1012  |
+| 1002  | 1013  |
+| 1003  | 1013  |
+| 1005  | 1013  |
++-------+-------+
+56 rows in set
+
+mysql> select p.model, q.model from pc as p, pc as q where (p.ram = q.ram and p.speed = q.speed) and p.model != q.model;
++-------+-------+
+| model | model |
++-------+-------+
+| 1012  | 1004  |
+| 1004  | 1012  |
++-------+-------+
+2 rows in set
+
+mysql> select p.model, q.model from pc as p, pc as q where (p.ram = q.ram and p.speed = q.speed);
++-------+-------+
+| model | model |
++-------+-------+
+| 1001  | 1001  |
+| 1002  | 1002  |
+| 1003  | 1003  |
+| 1004  | 1004  |
+| 1012  | 1004  |
+| 1005  | 1005  |
+| 1006  | 1006  |
+| 1007  | 1007  |
+| 1008  | 1008  |
+| 1009  | 1009  |
+| 1010  | 1010  |
+| 1011  | 1011  |
+| 1004  | 1012  |
+| 1012  | 1012  |
+| 1013  | 1013  |
++-------+-------+
+15 rows in set
+
+mysql> select p.model, q.model from pc as p, pc as q where (p.ram = q.ram and p.speed = q.speed) and p.model != q.model;
++-------+-------+
+| model | model |
++-------+-------+
+| 1012  | 1004  |
+| 1004  | 1012  |
++-------+-------+
+2 rows in set
+
+mysql> 
