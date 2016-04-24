@@ -1,0 +1,257 @@
+# 那种pc模型具有最后3.00的速度
+
+SELECT
+	model
+FROM
+	pc
+WHERE
+	speed > 3.00;
+
+
+# 那个生产厂商的笔记本的硬盘容量至少100GB
+
+SELECT DISTINCT
+	maker
+FROM
+	product,
+	pc
+WHERE
+	product.model = pc.model
+AND hd > 100;
+
+
+# 查询厂商B生产的所有产品的型号的价格
+
+SELECT
+	model,
+	price
+FROM
+	(
+		SELECT
+			pc.model AS model,
+			pc.price AS price
+		FROM
+			product,
+			pc
+		WHERE
+			pc.model = product.model
+		AND product.maker = 'b'
+		UNION
+			SELECT
+				laptop.model AS model,
+				laptop.price AS price
+			FROM
+				product,
+				laptop
+			WHERE
+				laptop.model = product.model
+			AND product.maker = 'b'
+			UNION
+				SELECT
+					printer.model AS model,
+					printer.price AS price
+				FROM
+					product,
+					printer
+				WHERE
+					printer.model = product.model
+				AND product.maker = 'b'
+	) AS T;
+
+
+# 查询所有彩色激光打印机的型号
+
+SELECT
+	model,
+	type
+FROM
+	printer
+WHERE
+	color = 'true';
+
+
+# 查询只出售笔记本，不出售pc的厂商
+
+SELECT DISTINCT
+	maker
+FROM
+	product
+WHERE
+	type = 'laptop'
+AND maker NOT IN (
+	SELECT DISTINCT
+		maker
+	FROM
+		product
+	WHERE
+		type = 'pc'
+);
+
+
+# 查询在一种或两种pc机上出现过的硬盘容量
+
+SELECT
+	hd
+FROM
+	pc
+GROUP BY
+	hd
+HAVING
+	count(hd) <= 2
+
+
+# 查询至少生产两种处理速度大于2.8的pc或者笔记本的厂商
+
+SELECT
+	maker
+FROM
+	(
+		SELECT
+			maker,
+			pc.speed AS speed,
+			product.model
+		FROM
+			product,
+			pc
+		WHERE
+			product.model = pc.model
+		UNION
+			SELECT
+				maker,
+				laptop.speed AS speed,
+				product.model
+			FROM
+				product,
+				laptop
+			WHERE
+				product.model = laptop.model
+	) AS u
+WHERE
+	speed > 2.8
+GROUP BY
+	maker
+HAVING
+	COUNT(maker) >= 2;
+
+
+# 查询平均处理速度(PC或者笔记本电脑)最高的所有厂商
+
+
+SELECT
+	maker,
+	type,
+	avg_speed
+FROM
+	(
+		SELECT
+			maker,
+			type,
+			avg(pc.speed) AS avg_speed
+		FROM
+			product,
+			pc
+		WHERE
+			product.model = pc.model
+		AND product.type = 'pc'
+		GROUP BY
+			maker
+	) AS u
+WHERE
+	avg_speed = (
+		SELECT
+			max(avg_speed)
+		FROM
+			(
+				SELECT
+					maker,
+					avg(pc.speed) AS avg_speed
+				FROM
+					product,
+					pc
+				WHERE
+					product.model = pc.model
+				AND product.type = 'pc'
+				GROUP BY
+					maker
+			) AS v
+	)
+UNION
+	SELECT
+		maker,
+		type,
+		avg_speed
+	FROM
+		(
+			SELECT
+				maker,
+				type,
+				avg(laptop.speed) AS avg_speed
+			FROM
+				product,
+				laptop
+			WHERE
+				product.model = laptop.model
+			AND product.type = 'laptop'
+			GROUP BY
+				maker
+		) AS u
+	WHERE
+		avg_speed = (
+			SELECT
+				max(avg_speed)
+			FROM
+				(
+					SELECT
+						maker,
+						avg(laptop.speed) AS avg_speed
+					FROM
+						product,
+						laptop
+					WHERE
+						product.model = laptop.model
+					AND product.type = 'laptop'
+					GROUP BY
+						maker
+				) AS v
+		)
+
+
+# 查询至少生产三种不同处理速度电脑的厂商
+
+SELECT
+	product.maker
+FROM
+	(
+		SELECT
+			pc.model AS _model,
+			pc.speed AS speed
+		FROM
+			pc
+		UNION
+			SELECT
+				laptop.model AS _model,
+				laptop.speed AS speed
+			FROM
+				laptop
+	) AS T,
+	product
+WHERE
+	product.model = T._model
+GROUP BY
+	product.maker
+HAVING
+	count(speed) > 3;
+
+
+# 查询恰好出售三种型号的pc厂商
+
+SELECT
+	maker
+FROM
+	product
+WHERE
+	type = 'pc'
+GROUP BY
+	maker
+HAVING
+	count(maker) = 3;
